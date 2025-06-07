@@ -115,6 +115,79 @@ export default function Home() {
         body, .form-container {
           font-family: 'Montserrat', Arial, sans-serif;
         }
+        .form-container {
+          max-width: 500px;
+          margin: 40px auto;
+          background: #fff;
+          padding: 32px 28px;
+          border-radius: 16px;
+          box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+        }
+        h2 {
+          text-align: center;
+          margin-bottom: 18px;
+          font-size: 2.4rem;
+          font-weight: 700;
+          color: #2d3a4a;
+        }
+        .help-text {
+          font-size: 1.08rem;
+          color: #333;
+          margin-bottom: 18px;
+          text-align: center;
+        }
+        .field-help {
+          display: block;
+          font-size: 0.97rem;
+          color: #555;
+          margin-top: 2px;
+          margin-bottom: 8px;
+        }
+        label {
+          display: block;
+          margin-bottom: 18px;
+          font-weight: 500;
+          color: #2d3a4a;
+        }
+        input[type="text"], input[type="email"], input[type="tel"], select, input[type="file"] {
+          width: 100%;
+          padding: 10px 12px;
+          margin-top: 6px;
+          border: 1px solid #d1d5db;
+          border-radius: 6px;
+          font-size: 1rem;
+          background: #f9fafb;
+          transition: border 0.2s;
+        }
+        input[type="text"]:focus, input[type="email"]:focus, input[type="tel"]:focus, select:focus {
+          border: 1.5px solid #007bff;
+          outline: none;
+          background: #fff;
+        }
+        input[type="radio"], input[type="checkbox"] {
+          margin-right: 8px;
+        }
+        button[type="submit"] {
+          width: 100%;
+          background: #007bff;
+          color: #fff;
+          border: none;
+          padding: 12px 0;
+          border-radius: 6px;
+          font-size: 1.1rem;
+          font-weight: 600;
+          cursor: pointer;
+          margin-top: 18px;
+          transition: background 0.2s;
+        }
+        button[type="submit"]:hover {
+          background: #0056b3;
+        }
+        .error {
+          color: #d32f2f;
+          margin-bottom: 12px;
+          font-weight: 500;
+        }
       `}</style>
       <div className="form-container">
         <h2>Gyanberry - Student WhatsApp Group Registration – 2025 Intake</h2>
@@ -203,82 +276,7 @@ export default function Home() {
           {error && <div className="error">{error}</div>}
           <button type="submit" disabled={submitting}>{submitting ? "Submitting..." : "Submit"}</button>
         </form>
-        <style jsx>{`
-          .form-container {
-            max-width: 500px;
-            margin: 40px auto;
-            background: #fff;
-            padding: 32px 28px;
-            border-radius: 16px;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-          }
-          h2 {
-            text-align: center;
-            margin-bottom: 18px;
-            font-size: 2.4rem;
-            font-weight: 700;
-            color: #2d3a4a;
-          }
-          .help-text {
-            font-size: 1.08rem;
-            color: #333;
-            margin-bottom: 18px;
-            text-align: center;
-          }
-          .field-help {
-            display: block;
-            font-size: 0.97rem;
-            color: #555;
-            margin-top: 2px;
-            margin-bottom: 8px;
-          }
-          label {
-            display: block;
-            margin-bottom: 18px;
-            font-weight: 500;
-            color: #2d3a4a;
-          }
-          input[type="text"], input[type="email"], input[type="tel"], select, input[type="file"] {
-            width: 100%;
-            padding: 10px 12px;
-            margin-top: 6px;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            font-size: 1rem;
-            background: #f9fafb;
-            transition: border 0.2s;
-          }
-          input[type="text"]:focus, input[type="email"]:focus, input[type="tel"]:focus, select:focus {
-            border: 1.5px solid #007bff;
-            outline: none;
-            background: #fff;
-          }
-          input[type="radio"], input[type="checkbox"] {
-            margin-right: 8px;
-          }
-          button[type="submit"] {
-            width: 100%;
-            background: #007bff;
-            color: #fff;
-            border: none;
-            padding: 12px 0;
-            border-radius: 6px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 18px;
-            transition: background 0.2s;
-          }
-          button[type="submit"]:hover {
-            background: #0056b3;
-          }
-          .error {
-            color: #d32f2f;
-            margin-bottom: 12px;
-            font-weight: 500;
-          }
-        `}</style>
       </div>
     </>
   );
-} 
+}
