@@ -119,7 +119,8 @@ export default function Home() {
       <div className="form-container">
         <h2>Gyanberry - Student WhatsApp Group Registration – 2025 Intake</h2>
         <p className="help-text">
-          Please fill out this form to be added to the official WhatsApp group for students enrolling in the 2025 intake. This group will help you stay informed, connect with fellow students, and receive important updates about your university journey.
+          Please fill out this form to be added to the official WhatsApp group for students enrolling in the 2025 intake.<br />
+          This group will help you stay informed, connect with fellow students, and receive important updates about your university journey.
         </p>
         <form onSubmit={handleSubmit} encType="multipart/form-data">
           <label>
@@ -129,14 +130,17 @@ export default function Home() {
           <label>
             Gyanberry App Registered Email ID*<br />
             <input type="email" name="email" value={form.email} onChange={handleChange} required />
+            <span className="field-help">Mention the primary email id that you registered with on Gyanberry App.</span>
           </label>
           <label>
             Registered Phone Number With Country Code*<br />
             <input type="text" name="phone" value={form.phone} onChange={handleChange} required placeholder="ex: +9715012345652" />
+            <span className="field-help">Primary Number with country code to be added on WhatsApp group</span>
           </label>
           <label>
             Alternate Phone Number With Country Code<br />
             <input type="text" name="altPhone" value={form.altPhone} onChange={handleChange} placeholder="ex: +9715012345652" />
+            <span className="field-help">Alternate Number with country code to be added on WhatsApp group</span>
           </label>
           <label>
             Did you register with Gyanberry for the University Application/Admission Process?*<br />
@@ -221,6 +225,13 @@ export default function Home() {
             margin-bottom: 18px;
             text-align: center;
           }
+          .field-help {
+            display: block;
+            font-size: 0.97rem;
+            color: #555;
+            margin-top: 2px;
+            margin-bottom: 8px;
+          }
           label {
             display: block;
             margin-bottom: 18px;
@@ -265,13 +276,6 @@ export default function Home() {
             color: #d32f2f;
             margin-bottom: 12px;
             font-weight: 500;
-          }
-          .field-help {
-            display: block;
-            font-size: 0.97rem;
-            color: #555;
-            margin-top: 2px;
-            margin-bottom: 8px;
           }
         `}</style>
       </div>
