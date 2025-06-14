@@ -190,10 +190,10 @@ export default function Home() {
         }
       `}</style>
       <div className="form-container">
-        <h2>Gyanberry - Student WhatsApp Group Registration – 2025 Intake</h2>
+        <h2>Gyanberry - Gyanberry's Meet & Greet and Student WhatsApp Group Registration – 2025 Intake</h2>
         <p className="help-text">
-          Please fill out this form to be added to the official WhatsApp group for students enrolling in the 2025 intake.<br />
-          This group will help you stay informed, connect with fellow students, and receive important updates about your university journey.
+          Join our official student community to connect with peers, receive updates, and get support throughout your university journey. By registering, you’ll be invited to exclusive Meet & Greet sessions and added to your university’s/ 
+          country dedicated WhatsApp group to stay informed and engaged every step of the way..
         </p>
         <form onSubmit={handleSubmit} encType="multipart/form-data">
           <label>
@@ -262,11 +262,14 @@ export default function Home() {
           <div style={{ background: "#f7f7f7", padding: 10, borderRadius: 4, marginBottom: 10 }}>
             <b>Terms & Conditions and Declaration</b>
             <ul>
-              <li>The student MUST HAVE PAID TUITION FEES OR CONFIRMED THEIR ADMISSION to the final University they wish to join, as per the specified requirements from the University to accept the offer.</li>
-              <li>The student must submit a valid proof of confirmation in the form. The file uploaded will be validated by the Gyanberry team.</li>
-              <li>The Whatsapp group will be created for each University where we have more than 5 students confirmed to proceed with the University.</li>
-              <li>You will be added ONLY IN ONE Whatsapp group based on the final university choice you are proceeding with.</li>
-              <li>The sole purpose of the whatsapp group is to introduce students/families with each other. The questions towards Gyanberry must not be added in the whatsapp and they should be directly written to admissions@gyanberry.com</li>
+              <li>Students must have paid tuition fees or confirmed their admission to the final university they are joining.</li>
+              <li>A valid proof of confirmation (admission letter, payment receipt, etc.) must be uploaded in the form.</li>
+              <li>The uploaded document will be verified by the Gyanberry team before group access is granted.</li>
+              <li>A WhatsApp group will be created only if there are 5 or more confirmed students for a specific university/country.</li>
+              <li>Students will be added to only one group, based on their final university choice.</li>
+              <li>The WhatsApp group is only for student and family introductions and interactions.</li>
+              <li>Do not post questions for Gyanberry in the WhatsApp group – such queries should be sent to admissions@gyanberry.com.</li>
+              <li>Meet & Greet sessions will be arranged only if 10 or more students are confirmed for a particular university.</li>
             </ul>
           </div>
           <label>
