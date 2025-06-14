@@ -54,18 +54,18 @@ apiRoute.post(async (req, res) => {
       body: fs.createReadStream(req.file.path),
     };
 
-    // Upload file to Drive and make it shareable in parallel
-    const [driveRes] = await Promise.all([
-      drive.files.create({
-        resource: fileMeta,
-        media: media,
-        fields: "id, webViewLink",
-      }),
-      drive.permissions.create({
-        fileId: fileMeta.id,
-        requestBody: { role: "reader", type: "anyone" },
-      })
-    ]);
+    // Upload file to Drive
+    const driveRes = await drive.files.create({
+      resource: fileMeta,
+      media: media,
+      fields: "id, webViewLink",
+    });
+
+    // Now set permissions using the returned file ID
+    await drive.permissions.create({
+      fileId: driveRes.data.id,
+      requestBody: { role: "reader", type: "anyone" },
+    });
 
     const fileLink = driveRes.data.webViewLink;
 
@@ -82,6 +82,7 @@ apiRoute.post(async (req, res) => {
       fileLink,
       req.body.recommend,
       new Date().toISOString(),
+      req.body.feedback || "",
     ];
 
     await sheets.spreadsheets.values.append({

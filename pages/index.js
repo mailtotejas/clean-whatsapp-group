@@ -21,6 +21,7 @@ export default function Home() {
     university: "",
     file: null,
     recommend: "",
+    feedback: "",
     acknowledge: false,
   });
   const [submitting, setSubmitting] = useState(false);
@@ -54,6 +55,7 @@ export default function Home() {
     if (!form.university) validationErrors.push("University is required");
     if (!form.file) validationErrors.push("Proof of enrollment is required");
     if (!form.recommend) validationErrors.push("Recommendation rating is required");
+    if (parseInt(form.recommend) <= 7 && !form.feedback) validationErrors.push("Please provide your feedback");
     if (!form.acknowledge) validationErrors.push("You must accept the terms and conditions");
     if (form.registered === "no" && !form.referral) {
       validationErrors.push("Please provide the name of the person/student who referred you");
@@ -285,6 +287,31 @@ export default function Home() {
             </select>
             <span> (10 - Highly recommended, 1 - Not at all recommended)</span>
           </label>
+          
+          {parseInt(form.recommend) <= 7 && form.recommend && (
+            <label>
+              Please provide us your feedback to improve or suggestions you would like us to incorporate. We truly value your opinion.*<br />
+              <textarea 
+                name="feedback" 
+                value={form.feedback} 
+                onChange={handleChange} 
+                required 
+                style={{
+                  width: '100%',
+                  minHeight: '100px',
+                  padding: '10px 12px',
+                  marginTop: '6px',
+                  border: '1px solid #d1d5db',
+                  borderRadius: '6px',
+                  fontSize: '1rem',
+                  background: '#f9fafb',
+                  transition: 'border 0.2s',
+                  fontFamily: 'inherit'
+                }}
+                placeholder="Please share your feedback..."
+              />
+            </label>
+          )}
           <div style={{ background: "#f7f7f7", padding: 10, borderRadius: 4, marginBottom: 10 }}>
             <b>Terms & Conditions and Declaration</b>
             <ul>
