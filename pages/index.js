@@ -45,14 +45,37 @@ export default function Home() {
     setSubmitting(true);
     setError("");
 
-    // Validation
-    if (!form.studentName || !form.email || !form.phone || !form.country || !form.university || !form.file || !form.recommend || !form.acknowledge) {
-      setError("Please fill all required fields.");
+    // Client-side validation
+    const validationErrors = [];
+    if (!form.studentName) validationErrors.push("Student name is required");
+    if (!form.email) validationErrors.push("Email is required");
+    if (!form.phone) validationErrors.push("Phone number is required");
+    if (!form.country) validationErrors.push("Country is required");
+    if (!form.university) validationErrors.push("University is required");
+    if (!form.file) validationErrors.push("Proof of enrollment is required");
+    if (!form.recommend) validationErrors.push("Recommendation rating is required");
+    if (!form.acknowledge) validationErrors.push("You must accept the terms and conditions");
+    if (form.registered === "no" && !form.referral) {
+      validationErrors.push("Please provide the name of the person/student who referred you");
+    }
+
+    if (validationErrors.length > 0) {
+      setError(validationErrors.join(". "));
       setSubmitting(false);
       return;
     }
-    if (form.registered === "no" && !form.referral) {
-      setError("Please provide the name of the person/student who referred you.");
+
+    // Validate file size (5MB limit)
+    if (form.file.size > 5 * 1024 * 1024) {
+      setError("File size must be less than 5MB");
+      setSubmitting(false);
+      return;
+    }
+
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+    if (!allowedTypes.includes(form.file.type)) {
+      setError("Only JPEG, PNG and PDF files are allowed");
       setSubmitting(false);
       return;
     }
@@ -72,19 +95,22 @@ export default function Home() {
         method: "POST",
         body: data,
       });
-      if (res.ok) {
-        if (parseInt(form.recommend, 10) >= 8) {
-          window.location.href = GOOGLE_REVIEW_URL;
-        } else {
-          setSubmitted(true);
-        }
+      
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || "Submission failed");
+      }
+
+      if (parseInt(form.recommend, 10) >= 8) {
+        window.location.href = GOOGLE_REVIEW_URL;
       } else {
-        setError("Submission failed. Please try again.");
+        setSubmitted(true);
       }
     } catch (err) {
-      setError("Submission failed. Please try again.");
+      setError(err.message || "Submission failed. Please try again.");
+    } finally {
+      setSubmitting(false);
     }
-    setSubmitting(false);
   };
 
   if (submitted) {
@@ -192,7 +218,7 @@ export default function Home() {
       <div className="form-container">
         <h2>Gyanberry - Gyanberry's Meet & Greet and Student WhatsApp Group Registration – 2025 Intake</h2>
         <p className="help-text">
-          Join our official student community to connect with peers, receive updates, and get support throughout your university journey. By registering, you’ll be invited to exclusive Meet & Greet sessions and added to your university’s/ 
+          Join our official student community to connect with peers, receive updates, and get support throughout your university journey. By registering, you'll be invited to exclusive Meet & Greet sessions and added to your university's/ 
           country dedicated WhatsApp group to stay informed and engaged every step of the way..
         </p>
         <form onSubmit={handleSubmit} encType="multipart/form-data">

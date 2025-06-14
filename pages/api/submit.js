@@ -4,11 +4,25 @@ import { google } from "googleapis";
 import fs from "fs";
 import path from "path";
 
-// Multer setup for file upload
-const upload = multer({ dest: "/tmp" });
+// Multer setup for file upload with size limits
+const upload = multer({
+  dest: "/tmp",
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB limit
+  },
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+    if (!allowedTypes.includes(file.mimetype)) {
+      cb(new Error('Invalid file type. Only JPEG, PNG and PDF files are allowed.'));
+      return;
+    }
+    cb(null, true);
+  }
+});
 
 const apiRoute = nextConnect({
   onError(error, req, res) {
+    console.error("API Error:", error);
     res.status(501).json({ error: `Sorry, something went wrong! ${error.message}` });
   },
   onNoMatch(req, res) {
@@ -20,7 +34,7 @@ apiRoute.use(upload.single("file"));
 
 apiRoute.post(async (req, res) => {
   try {
-    // 1. Upload file to Google Drive
+    // Initialize Google APIs
     const auth = new google.auth.JWT(
       process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
       null,
@@ -28,7 +42,9 @@ apiRoute.post(async (req, res) => {
       ["https://www.googleapis.com/auth/drive", "https://www.googleapis.com/auth/spreadsheets"]
     );
     const drive = google.drive({ version: "v3", auth });
+    const sheets = google.sheets({ version: "v4", auth });
 
+    // Prepare file metadata
     const fileMeta = {
       name: req.file.originalname,
       parents: [process.env.GOOGLE_DRIVE_FOLDER_ID],
@@ -37,22 +53,23 @@ apiRoute.post(async (req, res) => {
       mimeType: req.file.mimetype,
       body: fs.createReadStream(req.file.path),
     };
-    const driveRes = await drive.files.create({
-      resource: fileMeta,
-      media: media,
-      fields: "id, webViewLink",
-    });
 
-    // 2. Make file shareable
-    await drive.permissions.create({
-      fileId: driveRes.data.id,
-      requestBody: { role: "reader", type: "anyone" },
-    });
+    // Upload file to Drive and make it shareable in parallel
+    const [driveRes] = await Promise.all([
+      drive.files.create({
+        resource: fileMeta,
+        media: media,
+        fields: "id, webViewLink",
+      }),
+      drive.permissions.create({
+        fileId: fileMeta.id,
+        requestBody: { role: "reader", type: "anyone" },
+      })
+    ]);
 
     const fileLink = driveRes.data.webViewLink;
 
-    // 3. Save response to Google Sheets
-    const sheets = google.sheets({ version: "v4", auth });
+    // Save response to Google Sheets
     const row = [
       req.body.studentName,
       req.body.email,
@@ -66,6 +83,7 @@ apiRoute.post(async (req, res) => {
       req.body.recommend,
       new Date().toISOString(),
     ];
+
     await sheets.spreadsheets.values.append({
       spreadsheetId: process.env.GOOGLE_SHEETS_ID,
       range: "Sheet1!A1",
@@ -73,13 +91,21 @@ apiRoute.post(async (req, res) => {
       requestBody: { values: [row] },
     });
 
-    // 4. Clean up temp file
+    // Clean up temp file
     fs.unlinkSync(req.file.path);
 
     res.status(200).json({ ok: true });
   } catch (error) {
-   console.error("API Error:", error);    
-res.status(500).json({ error: error.message });
+    console.error("API Error:", error);
+    // Clean up temp file in case of error
+    if (req.file?.path) {
+      try {
+        fs.unlinkSync(req.file.path);
+      } catch (e) {
+        console.error("Error cleaning up temp file:", e);
+      }
+    }
+    res.status(500).json({ error: error.message });
   }
 });
 
